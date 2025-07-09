@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>نظام التشخيص</title>
+</head>
+<body style="font-family: Arial; padding: 20px;">
+    <h2>نظام خبير لتشخيص أمراض الجهاز الهضمي</h2>
+    <form method="POST">
+        <label><input type="checkbox" name="symptoms" value="إسهال"> إسهال</label><br>
+        <label><input type="checkbox" name="symptoms" value="مغص"> مغص</label><br>
+        <label><input type="checkbox" name="symptoms" value="قيء"> قيء</label><br>
+        <label><input type="checkbox" name="symptoms" value="حرقة"> حرقة</label><br>
+        <label><input type="checkbox" name="symptoms" value="ارتجاع"> ارتجاع</label><br>
+        <label><input type="checkbox" name="symptoms" value="طعم مر في الحلق"> طعم مر في الحلق</label><br><br>
+        <input type="submit" value="تشخيص">
+    </form>
+
+    {% if diagnosis %}
+        <h3>النتيجة:</h3>
+        <p style="color: green;">{{ diagnosis|safe }}</p>
+    {% endif %}
+</body>
+</html>
