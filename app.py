@@ -16,6 +16,9 @@ class DigestiveExpertSystem(KnowledgeEngine):
     @Rule(Fact(symptom='حرقة'), Fact(symptom='ارتجاع'))
     def reflux(self):
         self.result.append("🔥 ارتجاع مريئي")
+    @Rule(Fact(symptom='إسهال'))
+    def diarrhea_case(self):
+        self.result.append("💧 الإسهال قد يدل على عدوى أو تلبّك معوي")
 
 @app.route("/", methods=["GET", "POST"])
 def index():
