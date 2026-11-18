@@ -3,81 +3,301 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>مكتبة جواد نشاشيبي</title>
+<title>نظام خبير تعليمي لأمراض الجهاز الهضمي</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Amiri:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f3efe6;--card:#fffdf8;--ink:#22201b;--muted:#6b665b;--line:#ddd5c3;--accent:#8a4b20;--accent-soft:#f3e4d6;}
-@media (prefers-color-scheme:dark){:root{--bg:#16140f;--card:#211e18;--ink:#eee8dc;--muted:#a59d8d;--line:#3a352b;--accent:#e09a62;--accent-soft:#3a2a1d;}}
+:root{
+  --bg:#f2f0ec; --card:#fffefb; --ink:#1e2430; --muted:#5d6574; --line:#dcd8cf;
+  --blue:#2c5d8a; --blue-soft:#e2ebf4; --amber:#b06f16; --amber-soft:#f7ead3;
+  --red:#a8352a; --red-soft:#f6e0dc; --green:#2f6b4f; --mono:'IBM Plex Mono',monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#13161c;--card:#1c2029;--ink:#e8ebf1;--muted:#9aa2b1;--line:#323846;
+  --blue:#7fb0de;--blue-soft:#1f2c3b;--amber:#e0a24a;--amber-soft:#3a2e1c;--red:#e57d70;--red-soft:#3b2421;--green:#6fbf94;}
+}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:'Tajawal',system-ui,sans-serif;font-size:17px;line-height:1.6}
-.wrap{max-width:860px;margin:0 auto;padding:36px 18px 48px}
-header{text-align:center;margin-bottom:28px}
-header h1{font-family:'Amiri',serif;font-size:2.4rem;margin:0;color:var(--accent);line-height:1.3}
-header p{margin:6px 0 0;color:var(--muted)}
-.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
-a.book{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-inline-start:6px solid var(--accent);border-radius:12px;padding:18px;text-decoration:none;color:inherit;transition:transform .15s, box-shadow .15s}
-a.book:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.08)}
-.book .icon{font-size:2rem;line-height:1}
-.book h2{font-size:1.15rem;margin:10px 0 4px}
-.book .slug{font-size:.8rem;color:var(--muted);direction:ltr;text-align:right;font-family:monospace}
-.book .open{margin-top:auto;padding-top:12px;color:var(--accent);font-weight:700;font-size:.92rem}
-.status{text-align:center;color:var(--muted);font-size:.9rem;margin-top:14px}
-footer{margin-top:36px;text-align:center;font-size:.85rem;color:var(--muted);line-height:1.8}
-footer a{color:inherit}
+.wrap{max-width:680px;margin:0 auto;padding:20px 16px 48px}
+header h1{font-size:1.4rem;margin:4px 0 2px;font-weight:800}
+header p{margin:0;color:var(--muted);font-size:.95rem}
+.badge{display:inline-block;font-family:var(--mono);font-size:.72rem;color:var(--blue);border:1px solid var(--blue);border-radius:4px;padding:1px 7px;letter-spacing:.04em}
+.disclaimer{margin-top:12px;background:var(--red-soft);color:var(--ink);border-radius:10px;padding:10px 14px;font-size:.9rem}
+.disclaimer b{color:var(--red)}
+nav{display:flex;gap:6px;margin:16px 0 14px;border-bottom:1px solid var(--line)}
+nav button{flex:1;background:none;border:none;border-bottom:3px solid transparent;padding:10px 4px;font:inherit;font-weight:700;color:var(--muted);cursor:pointer}
+nav button.on{color:var(--ink);border-bottom-color:var(--blue)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+.progress{display:flex;justify-content:space-between;align-items:center;font-size:.88rem;color:var(--muted);margin-bottom:12px;gap:8px}
+.hyp{font-size:.85rem;background:var(--blue-soft);color:var(--blue);border-radius:999px;padding:2px 10px;font-weight:700}
+.q{font-size:1.28rem;font-weight:700;margin:4px 0 18px}
+.answers{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.btn{font:inherit;font-weight:700;border-radius:10px;padding:13px 8px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.btn:active{transform:scale(.98)}
+.yes{border-color:var(--green);color:var(--green)}
+.no{border-color:var(--red);color:var(--red)}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.link{background:none;border:none;font:inherit;color:var(--amber);font-weight:700;cursor:pointer;padding:6px 0}
+.explain{margin-top:12px;background:var(--amber-soft);border-radius:10px;padding:12px 14px;font-size:.95rem}
+.explain b{color:var(--amber)}
+.rule{font-family:var(--mono);font-size:.84rem;background:var(--blue-soft);border-radius:10px;padding:12px 14px;margin-top:10px;line-height:1.9}
+.rule .k{color:var(--blue);font-weight:700}
+.ok{color:var(--green)} .bad{color:var(--red);text-decoration:line-through} .wait{color:var(--muted)}
+.result h2{margin:6px 0 4px;font-size:1.45rem}
+.tag{display:inline-block;font-size:.8rem;font-weight:700;border-radius:6px;padding:1px 8px}
+.tag.urgent{background:var(--red);color:#fff}
+.tag.normal{background:var(--blue-soft);color:var(--blue)}
+.advice{margin-top:10px;border-inline-start:4px solid var(--blue);padding:4px 12px}
+.advice.urgent{border-color:var(--red)}
+.facts{margin:8px 0 0;padding:0 18px 0 0}
+.facts li{margin:2px 0}
+.kb-item{border-top:1px solid var(--line);padding:14px 0}
+.kb-item:first-child{border-top:none;padding-top:0}
+.kb-item h3{margin:0 0 2px;font-size:1.05rem}
+.muted{color:var(--muted);font-size:.92rem}
+.how h3{margin:18px 0 6px}
+.how h3:first-child{margin-top:0}
+.compare{width:100%;border-collapse:collapse;font-size:.9rem;margin-top:8px}
+.compare td,.compare th{border:1px solid var(--line);padding:6px 8px;text-align:right;vertical-align:top}
+.compare th{background:var(--blue-soft)}
+.hidden{display:none}
+.found{margin-top:14px;border-top:1px dashed var(--line);padding-top:10px}
+footer.lic{margin-top:28px;text-align:center;font-size:.85rem;color:var(--muted);line-height:1.8}footer.lic a{color:inherit}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>المكتبة</h1>
-    <p>أنظمة خبيرة ومشاريع تعليمية في الذكاء الاصطناعي والعلوم والبرمجة</p>
+    <span class="badge">EXPERT SYSTEM · BACKWARD CHAINING</span>
+    <h1>نظام خبير تعليمي لأمراض الجهاز الهضمي</h1>
+    <p>يسألك النظام سؤالاً بعد سؤال، ويختبر الفرضيات واحدة تلو الأخرى كما كان يفعل MYCIN.</p>
+    <div class="disclaimer"><b>تنبيه:</b> هذا نظام تعليمي لفهم طريقة عمل الأنظمة الخبيرة، وليس أداة تشخيص طبي، ولا يغني عن استشارة الطبيب.</div>
   </header>
 
-  <div class="shelf" id="shelf"></div>
-  <div class="status" id="status"></div>
+  <nav>
+    <button data-tab="play" class="on">التشخيص</button>
+    <button data-tab="kb">قاعدة المعرفة</button>
+    <button data-tab="how">كيف يعمل؟</button>
+  </nav>
 
-  <footer>
+  <section id="play" class="card"></section>
+  <section id="kb" class="card hidden"></section>
+  <section id="how" class="card hidden how">
+    <h3>التسلسل الخلفي (Backward chaining)</h3>
+    <p>يبدأ النظام من <b>فرضية</b>، مثلاً «هل هو ارتجاع مريئي؟»، ثم يرجع إلى شروط قاعدتها ويسأل عنها واحداً واحداً:</p>
+    <ul class="facts">
+      <li>إذا تحققت كل الشروط: <b>تثبت الفرضية</b> وتظهر النتيجة.</li>
+      <li>إذا فشل شرط واحد: <b>تسقط الفرضية</b> وينتقل النظام إلى التالية.</li>
+      <li>لا يكرر سؤالاً سبق أن أجبت عنه، بل يستخدم الحقيقة المحفوظة في <b>الذاكرة العاملة</b>.</li>
+    </ul>
+    <p>ترتيب الفرضيات مقصود: يبدأ النظام بعلامات الخطر، ثم الحالات العاجلة، ثم الحالات الشائعة. وهكذا يفكر الطبيب أيضاً.</p>
+    <h3>مقارنة مع نظام تصنيف الكائنات الحية</h3>
+    <table class="compare">
+      <tr><th></th><th>هذا النظام</th><th>نظام التصنيف</th></tr>
+      <tr><td>نقطة البداية</td><td>فرضية (هدف)</td><td>الحقائق المتاحة</td></tr>
+      <tr><td>اختيار السؤال</td><td>الشرط التالي في الفرضية الحالية</td><td>السؤال الذي يستبعد أكثر المجموعات</td></tr>
+      <tr><td>النتيجة</td><td>قد تثبت أكثر من فرضية</td><td>مجموعة واحدة</td></tr>
+      <tr><td>أنظمة مشابهة</td><td>MYCIN، Prolog، Crystal</td><td>شجرة القرار، لعبة «20 سؤالاً»</td></tr>
+    </table>
+    <h3>أفكار للنقاش مع الطلاب</h3>
+    <ul class="facts">
+      <li>لماذا يسأل النظام عن الدم في البراز أولاً؟</li>
+      <li>ماذا يحدث إذا تغيّر ترتيب الفرضيات؟</li>
+      <li>الطبيب يلاحظ أشياء لا يسأل عنها النظام. ما حدود الأنظمة الخبيرة؟</li>
+      <li>اكتب قاعدة لمرض جديد بعد مقابلة طبيب أو ممرض.</li>
+    </ul>
+  </section>
+<footer class="lic">
     © 2026 جواد نشاشيبي · للاستخدام التعليمي المجاني · <b>يُمنع البيع أو الاستخدام التجاري</b><br>
     مرخّص بموجب <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.ar">المشاع الإبداعي: نسب المصنَّف، غير تجاري 4.0 (CC BY-NC 4.0)</a>
   </footer>
 </div>
 
 <script>
-const USER = "jawadnashashibi";
-const SITE = "https://" + USER + ".github.io/";
+// ===== الأسئلة (الأعراض) =====
+const Q = {
+  blood:     {q:"هل يوجد دم في البراز أو القيء، أو براز أسود كالقطران؟", s:"دم في البراز أو القيء أو براز أسود"},
+  severe:    {q:"هل الألم شديد جداً ومفاجئ، والبطن قاسٍ عند اللمس؟", s:"ألم شديد مفاجئ وبطن قاسٍ"},
+  navel:     {q:"هل بدأ الألم حول السُّرّة ثم انتقل إلى أسفل البطن من الجهة اليمنى؟", s:"ألم بدأ حول السرة وانتقل لأسفل اليمين"},
+  fever:     {q:"هل توجد حرارة (حُمّى)؟", s:"حرارة"},
+  ruq:       {q:"هل يوجد ألم في أعلى البطن من الجهة اليمنى، يزداد بعد الأكل الدسم؟", s:"ألم أعلى اليمين بعد الأكل الدسم"},
+  diarrhea:  {q:"هل يوجد إسهال؟", s:"إسهال"},
+  vomit:     {q:"هل يوجد قيء؟", s:"قيء"},
+  meal:      {q:"هل بدأت الأعراض بعد ساعات قليلة من وجبة، أو مرض آخرون أكلوا الطعام نفسه؟", s:"بدأت بعد وجبة أو مرض آخرون معك"},
+  cramps:    {q:"هل يوجد مغص في البطن؟", s:"مغص"},
+  heartburn: {q:"هل تشعر بحرقة خلف عظمة الصدر؟", s:"حرقة خلف الصدر"},
+  bitter:    {q:"هل تشعر بطعم مُرّ في الحلق؟", s:"طعم مر في الحلق"},
+  regurg:    {q:"هل يرجع الطعام أو سائل حامض إلى الفم؟", s:"ارتجاع طعام أو سائل حامض"},
+  epigastric:{q:"هل يوجد ألم حارق في أعلى البطن (فم المعدة)؟", s:"ألم حارق في فم المعدة"},
+  hunger:    {q:"هل يزداد هذا الألم عند الجوع، أو يتغير بوضوح مع الأكل؟", s:"الألم يتغير مع الجوع أو الأكل"},
+  dairy:     {q:"هل تظهر الأعراض بعد شرب الحليب أو أكل مشتقاته؟", s:"أعراض بعد الحليب ومشتقاته"},
+  bloating:  {q:"هل يوجد انتفاخ أو غازات؟", s:"انتفاخ أو غازات"},
+  months:    {q:"هل تتكرر الأعراض منذ أشهر؟", s:"أعراض متكررة منذ أشهر"},
+  relief:    {q:"هل يخف ألم البطن بعد التبرز؟", s:"الألم يخف بعد التبرز"},
+  alternate: {q:"هل يتناوب الإسهال مع الإمساك؟", s:"تناوب الإسهال والإمساك"},
+  constip:   {q:"هل التبرز أقل من 3 مرات في الأسبوع، أو البراز قاسٍ ومؤلم؟", s:"تبرز قليل أو براز قاسٍ"},
+  fullness:  {q:"هل تشعر بشبع سريع أو امتلاء مزعج بعد الأكل؟", s:"شبع سريع وامتلاء بعد الأكل"}
+};
 
-// قائمة احتياطية تظهر إذا لم يتصل بـ GitHub. أضف هنا أي مشروع جديد إن أردت.
-const FALLBACK = [
-  {name:"classify-living-things", title:"تصنيف الكائنات الحية", icon:"🌿"},
-  {name:"diagnosis-expert-app",   title:"تشخيص أمراض الجهاز الهضمي", icon:"🩺"}
+// ===== قاعدة المعرفة (مرتبة حسب الأولوية) =====
+const RULES = [
+  {id:"bleed", name:"علامة خطر: نزيف في الجهاز الهضمي", urgent:true, if:["blood"],
+   info:"وجود دم في البراز أو القيء، أو براز أسود، قد يدل على نزيف في الجهاز الهضمي.",
+   advice:"هذه علامة خطر. راجع الطبيب أو الطوارئ فوراً."},
+  {id:"acute", name:"علامة خطر: ألم بطن حاد", urgent:true, if:["severe"],
+   info:"الألم الشديد المفاجئ مع قساوة البطن قد يدل على حالة جراحية عاجلة.",
+   advice:"توجّه إلى الطوارئ فوراً."},
+  {id:"append", name:"احتمال التهاب الزائدة الدودية", urgent:true, if:["navel","fever"],
+   info:"يبدأ الألم عادة حول السرة ثم ينتقل إلى أسفل البطن من الجهة اليمنى، وقد يصاحبه غثيان وحرارة.",
+   advice:"حالة عاجلة تحتاج فحصاً طبياً في نفس اليوم."},
+  {id:"gall", name:"احتمال حصى المرارة", urgent:false, if:["ruq"],
+   info:"ألم في أعلى البطن من الجهة اليمنى، يظهر غالباً بعد الوجبات الدسمة، وقد يمتد إلى الكتف الأيمن.",
+   advice:"راجع الطبيب، فالتشخيص يحتاج عادة صورة بالأمواج فوق الصوتية."},
+  {id:"poison", name:"احتمال تسمم غذائي", urgent:false, if:["diarrhea","vomit","meal"],
+   info:"تبدأ الأعراض بعد ساعات من تناول طعام ملوث، وكثيراً ما يمرض كل من أكل منه.",
+   advice:"أكثر من شرب السوائل، وراجع الطبيب إذا استمرت الأعراض أو ظهرت علامات جفاف."},
+  {id:"gastro", name:"احتمال التهاب المعدة والأمعاء", urgent:false, if:["diarrhea","cramps","vomit"],
+   info:"عدوى شائعة، فيروسية في الغالب، تسبب إسهالاً ومغصاً وقيئاً، وتتحسن عادة خلال أيام.",
+   advice:"السوائل ومحلول الإماهة أهم علاج. راجع الطبيب إذا ظهرت علامات جفاف أو طالت الأعراض."},
+  {id:"bile", name:"احتمال ارتجاع صفراوي", urgent:false, if:["heartburn","bitter"],
+   info:"رجوع العصارة الصفراوية إلى المعدة والمريء، فيظهر طعم مر مع الحرقة.",
+   advice:"راجع الطبيب لتحديد السبب والعلاج المناسب."},
+  {id:"gerd", name:"احتمال ارتجاع مريئي", urgent:false, if:["heartburn","regurg"],
+   info:"رجوع حمض المعدة إلى المريء، فتظهر حرقة خلف الصدر ويرجع سائل حامض إلى الفم.",
+   advice:"تفيد الوجبات الصغيرة، وتجنّب الاستلقاء بعد الأكل مباشرة. راجع الطبيب إذا تكررت الأعراض."},
+  {id:"ulcer", name:"احتمال قرحة في المعدة أو الاثني عشر", urgent:false, if:["epigastric","hunger"],
+   info:"ألم حارق في فم المعدة، يتغير مع الأكل أو الجوع. من أشهر أسبابه جرثومة المعدة وبعض المسكنات.",
+   advice:"راجع الطبيب، فقد يطلب فحص جرثومة المعدة."},
+  {id:"lactose", name:"احتمال عدم تحمل اللاكتوز", urgent:false, if:["dairy","bloating"],
+   info:"صعوبة في هضم سكر الحليب، فيسبب انتفاخاً وغازات وأحياناً إسهالاً بعد الحليب ومشتقاته.",
+   advice:"لاحظ الأعراض بعد تقليل الحليب، واستشر الطبيب قبل حذف مجموعة غذائية كاملة."},
+  {id:"ibs", name:"احتمال القولون العصبي", urgent:false, if:["months","relief","alternate"],
+   info:"اضطراب مزمن في حركة الأمعاء، يسبب ألماً يخف بعد التبرز، مع تناوب الإسهال والإمساك.",
+   advice:"يحتاج تشخيصه طبيباً يستبعد الأسباب الأخرى أولاً."},
+  {id:"constip", name:"احتمال إمساك", urgent:false, if:["constip"],
+   info:"قلة مرات التبرز أو صعوبته. من أسبابه الشائعة قلة الألياف والماء والحركة.",
+   advice:"أكثر من الماء والخضار والفواكه والحركة، وراجع الطبيب إذا استمر أو صاحبه ألم شديد."},
+  {id:"dyspepsia", name:"احتمال عسر الهضم", urgent:false, if:["fullness","bloating"],
+   info:"شعور بالامتلاء والانتفاخ وعدم الراحة في أعلى البطن بعد الأكل.",
+   advice:"تفيد الوجبات الصغيرة والأكل ببطء. راجع الطبيب إذا استمرت الأعراض."},
+  {id:"diar", name:"إسهال (غير محدد السبب)", urgent:false, if:["diarrhea"],
+   info:"الإسهال وحده قد يدل على عدوى بسيطة أو تلبك معوي.",
+   advice:"أكثر من السوائل، وراجع الطبيب إذا استمر أكثر من يومين أو ظهرت حرارة أو جفاف."}
 ];
-// أيقونات اختيارية حسب اسم المستودع
-const ICONS = {"classify-living-things":"🌿","diagnosis-expert-app":"🩺"};
 
-function draw(list){
-  document.getElementById('shelf').innerHTML = list.map(p => `
-    <a class="book" href="${SITE}${p.name}/">
-      <div class="icon">${p.icon || ICONS[p.name] || "📘"}</div>
-      <h2>${p.title || p.name}</h2>
-      <div class="slug">${p.name}</div>
-      <div class="open">افتح المشروع ←</div>
-    </a>`).join('');
+// ===== محرك الاستدلال: التسلسل الخلفي =====
+let facts={}, order=[], ruleIdx=0, found=[], explainOpen=false, finished=false;
+
+function status(rule){ // 'true' | 'false' | next question id
+  for(const c of rule.if){
+    if(!(c in facts)) return c;
+    if(facts[c]!==true) return 'false';
+  }
+  return 'true';
+}
+function step(){ // تقدّم حتى نحتاج سؤالاً أو تثبت فرضية
+  while(ruleIdx<RULES.length){
+    const st=status(RULES[ruleIdx]);
+    if(st==='false'){ ruleIdx++; continue; }
+    if(st==='true'){ found.push(RULES[ruleIdx]); ruleIdx++; return {type:'found'}; }
+    return {type:'ask', q:st, rule:RULES[ruleIdx]};
+  }
+  return {type:'done'};
 }
 
-draw(FALLBACK);
+const $=s=>document.querySelector(s);
+const play=$('#play');
+let pending=null, lastFoundShown=0;
 
-// تحديث تلقائي: يجلب كل المستودعات المنشورة على GitHub Pages
-fetch("https://api.github.com/users/" + USER + "/repos?per_page=100&sort=updated")
-  .then(r => r.ok ? r.json() : Promise.reject())
-  .then(repos => {
-    const list = repos
-      .filter(r => r.has_pages && r.name.toLowerCase() !== USER + ".github.io")
-      .map(r => ({name:r.name, title:r.description}));
-    if (list.length) draw(list);
-    document.getElementById('status').textContent = "تتحدث القائمة تلقائياً من GitHub · عدد المشاريع: " + list.length;
-  })
-  .catch(() => {});
+function render(){
+  if(!pending) pending=step();
+  if(pending.type==='found'){ return renderFound(); }
+  if(pending.type==='done'){ return renderDone(); }
+  const {q,rule}=pending;
+  const n=order.length+1;
+  play.innerHTML=`
+    <div class="progress"><span>السؤال ${n}</span><span class="hyp">الفرضية ${ruleIdx+1} من ${RULES.length}</span></div>
+    <div class="q">${Q[q].q}</div>
+    <div class="answers">
+      <button class="btn yes" data-v="1">نعم</button>
+      <button class="btn no" data-v="0">لا</button>
+      <button class="btn" data-v="null">لا أعرف</button>
+    </div>
+    <div class="row">
+      <button class="link" id="why">${explainOpen?'إخفاء التفسير':'لماذا تسأل هذا السؤال؟'}</button>
+      ${order.length?'<button class="link" id="back">↩ السؤال السابق</button>':''}
+    </div>
+    ${explainOpen?`<div class="explain"><b>لماذا؟</b> أختبر الآن الفرضية: <b>${rule.name}</b>. قاعدتها:${ruleHTML(rule)}</div>`:''}
+    ${foundList()}`;
+  play.querySelectorAll('.answers .btn').forEach(b=>b.onclick=()=>{
+    const v=b.dataset.v; facts[q]= v==='1'?true: v==='0'?false:null; order.push(q); pending=null; render();
+  });
+  $('#why').onclick=()=>{explainOpen=!explainOpen;render();};
+  if(order.length) $('#back').onclick=back;
+}
+function ruleHTML(r){
+  const parts=r.if.map(c=>{
+    const cls=!(c in facts)?'wait':facts[c]===true?'ok':'bad';
+    const sym=cls==='ok'?'✓':cls==='bad'?'✗':'○';
+    return `<span class="${cls}">${sym} ${Q[c].s}</span>`;
+  });
+  return `<div class="rule"><span class="k">إذا</span> ${parts.join(' <span class="k">و</span> ')}<br><span class="k">فإن</span> ${r.name}</div>`;
+}
+function foundList(){
+  if(!found.length) return '';
+  return `<div class="found muted">احتمالات ثبتت حتى الآن: ${found.map(r=>r.name).join('، ')}</div>`;
+}
+function renderFound(){
+  const r=found[found.length-1];
+  play.innerHTML=`<div class="result">
+    <span class="tag ${r.urgent?'urgent':'normal'}">${r.urgent?'عاجل':'نتيجة'}</span>
+    <h2>${r.name}</h2>
+    <p style="margin:4px 0">${r.info}</p>
+    <div class="advice ${r.urgent?'urgent':''}">${r.advice}</div>
+    <div class="row"><button class="link" id="how2">كيف وصلت إلى هذه النتيجة؟</button></div>
+    <div id="howbox" class="hidden">
+      <div class="explain"><b>كيف؟</b> اختبرت ${ruleIdx} فرضيات بالترتيب، وأجبت عن ${order.length} أسئلة. سقطت كل فرضية فشل أحد شروطها، حتى تحققت كل شروط هذه القاعدة:</div>
+      ${ruleHTML(r)}
+    </div>
+    <p class="muted" style="margin-top:12px">قد تكون هناك احتمالات أخرى. يمكنك أن تطلب من النظام متابعة اختبار باقي الفرضيات.</p>
+    <div class="row">
+      ${ruleIdx<RULES.length?'<button class="btn primary" id="cont">تابع البحث عن احتمالات أخرى</button>':''}
+      <button class="btn" id="again">ابدأ من جديد</button>
+    </div></div>`;
+  $('#how2').onclick=()=>$('#howbox').classList.toggle('hidden');
+  if($('#cont')) $('#cont').onclick=()=>{pending=null;explainOpen=false;render();};
+  $('#again').onclick=restart;
+}
+function renderDone(){
+  const asked=order.map(q=>`<li>${facts[q]===true?'نعم':facts[q]===false?'لا':'لا أعرف'}: ${Q[q].s}</li>`).join('');
+  play.innerHTML=`<div class="result">
+    <h2>${found.length?'انتهى اختبار كل الفرضيات':'لا يوجد تشخيص واضح'}</h2>
+    ${found.length?`<p>الاحتمالات التي ثبتت:</p><ul class="facts">${found.map(r=>`<li><b>${r.name}</b>${r.urgent?' <span class="tag urgent">عاجل</span>':''}</li>`).join('')}</ul>`
+      :`<p>لم تتحقق شروط أي قاعدة في قاعدة المعرفة. النظام لا يعرف إلا ما وضعه فيه الخبير، فإذا استمرت الأعراض فراجع الطبيب.</p>`}
+    <p class="muted">إجاباتك المحفوظة في الذاكرة العاملة:</p><ul class="facts muted">${asked}</ul>
+    <div class="row"><button class="btn primary" id="again">ابدأ من جديد</button></div></div>`;
+  $('#again').onclick=restart;
+}
+function back(){ // إعادة الحساب من البداية بعد حذف آخر إجابة
+  const q=order.pop(); delete facts[q];
+  ruleIdx=0; found=[]; pending=null; explainOpen=false;
+  // أعد تشغيل المحرك بصمت حتى أول سؤال غير مُجاب
+  while(true){ const p=step(); if(p.type!=='found'){ pending=p; break; } }
+  render();
+}
+function restart(){ facts={}; order=[]; ruleIdx=0; found=[]; pending=null; explainOpen=false; render(); }
+
+// ===== عرض قاعدة المعرفة =====
+$('#kb').innerHTML=`<p class="muted" style="margin-top:0">هذه القواعد مرتبة حسب أولوية الاختبار، وتبدأ بعلامات الخطر. القواعد مبسّطة لأغراض تعليمية.</p>`+
+  RULES.map((r,i)=>`<div class="kb-item"><h3>القاعدة ${i+1}: ${r.name} ${r.urgent?'<span class="tag urgent">عاجل</span>':''}</h3>
+  <div class="rule"><span class="k">إذا</span> ${r.if.map(c=>Q[c].s).join(' <span class="k">و</span> ')}<br><span class="k">فإن</span> ${r.name}</div></div>`).join('');
+
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));
+  ['play','kb','how'].forEach(id=>$('#'+id).classList.toggle('hidden',id!==b.dataset.tab));
+});
+render();
 </script>
 </body>
 </html>
