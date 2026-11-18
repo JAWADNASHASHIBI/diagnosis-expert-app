@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مكتبة جواد نشاشيبي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Amiri:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3efe6;--card:#fffdf8;--ink:#22201b;--muted:#6b665b;--line:#ddd5c3;--accent:#8a4b20;--accent-soft:#f3e4d6;}
+@media (prefers-color-scheme:dark){:root{--bg:#16140f;--card:#211e18;--ink:#eee8dc;--muted:#a59d8d;--line:#3a352b;--accent:#e09a62;--accent-soft:#3a2a1d;}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Tajawal',system-ui,sans-serif;font-size:17px;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding:36px 18px 48px}
+header{text-align:center;margin-bottom:28px}
+header h1{font-family:'Amiri',serif;font-size:2.4rem;margin:0;color:var(--accent);line-height:1.3}
+header p{margin:6px 0 0;color:var(--muted)}
+.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+a.book{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-inline-start:6px solid var(--accent);border-radius:12px;padding:18px;text-decoration:none;color:inherit;transition:transform .15s, box-shadow .15s}
+a.book:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.08)}
+.book .icon{font-size:2rem;line-height:1}
+.book h2{font-size:1.15rem;margin:10px 0 4px}
+.book .slug{font-size:.8rem;color:var(--muted);direction:ltr;text-align:right;font-family:monospace}
+.book .open{margin-top:auto;padding-top:12px;color:var(--accent);font-weight:700;font-size:.92rem}
+.status{text-align:center;color:var(--muted);font-size:.9rem;margin-top:14px}
+footer{margin-top:36px;text-align:center;font-size:.85rem;color:var(--muted);line-height:1.8}
+footer a{color:inherit}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>المكتبة</h1>
+    <p>أنظمة خبيرة ومشاريع تعليمية في الذكاء الاصطناعي والعلوم والبرمجة</p>
+  </header>
+
+  <div class="shelf" id="shelf"></div>
+  <div class="status" id="status"></div>
+
+  <footer>
+    © 2026 جواد نشاشيبي · للاستخدام التعليمي المجاني · <b>يُمنع البيع أو الاستخدام التجاري</b><br>
+    مرخّص بموجب <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.ar">المشاع الإبداعي: نسب المصنَّف، غير تجاري 4.0 (CC BY-NC 4.0)</a>
+  </footer>
+</div>
+
+<script>
+const USER = "jawadnashashibi";
+const SITE = "https://" + USER + ".github.io/";
+
+// قائمة احتياطية تظهر إذا لم يتصل بـ GitHub. أضف هنا أي مشروع جديد إن أردت.
+const FALLBACK = [
+  {name:"classify-living-things", title:"تصنيف الكائنات الحية", icon:"🌿"},
+  {name:"diagnosis-expert-app",   title:"تشخيص أمراض الجهاز الهضمي", icon:"🩺"}
+];
+// أيقونات اختيارية حسب اسم المستودع
+const ICONS = {"classify-living-things":"🌿","diagnosis-expert-app":"🩺"};
+
+function draw(list){
+  document.getElementById('shelf').innerHTML = list.map(p => `
+    <a class="book" href="${SITE}${p.name}/">
+      <div class="icon">${p.icon || ICONS[p.name] || "📘"}</div>
+      <h2>${p.title || p.name}</h2>
+      <div class="slug">${p.name}</div>
+      <div class="open">افتح المشروع ←</div>
+    </a>`).join('');
+}
+
+draw(FALLBACK);
+
+// تحديث تلقائي: يجلب كل المستودعات المنشورة على GitHub Pages
+fetch("https://api.github.com/users/" + USER + "/repos?per_page=100&sort=updated")
+  .then(r => r.ok ? r.json() : Promise.reject())
+  .then(repos => {
+    const list = repos
+      .filter(r => r.has_pages && r.name.toLowerCase() !== USER + ".github.io")
+      .map(r => ({name:r.name, title:r.description}));
+    if (list.length) draw(list);
+    document.getElementById('status').textContent = "تتحدث القائمة تلقائياً من GitHub · عدد المشاريع: " + list.length;
+  })
+  .catch(() => {});
+</script>
+</body>
+</html>
